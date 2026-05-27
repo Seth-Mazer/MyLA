@@ -1,0 +1,12 @@
+.idea/
+cmake-build-*/
+build/
+.DS_Store
+*.exe
+*.obj
+*.o
+*.a
+*.lib
+*.dll
+*.dylib
+*.so

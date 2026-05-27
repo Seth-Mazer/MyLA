@@ -1,0 +1,135 @@
+//Includes
+#include <MyLa/MyLA.h>
+
+
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+// Name Space
+//-----------------------------------------------------------------
+//-----------------------------------------------------------------
+
+namespace myla {
+
+    //-----------------------------------------------------------------
+    //-----------------------------------------------------------------
+    // Primitive Operations
+    //-----------------------------------------------------------------
+    //-----------------------------------------------------------------
+
+    Matrix add(const Matrix &A, const Matrix &B) {
+
+        //Check dimension of each matrix
+        if (A.n() != B.n() || A.m() != B.m()) {
+            throw std::invalid_argument("Incompatible matrix dimensions.");
+        }
+
+        //Initializing C, to the dimension of A
+        Matrix C(A.m(), A.n());
+
+        //Looping through, populating C, with the addition of each entry
+        for (size_t i = 0; i < A.m(); i++) {
+            for (size_t j = 0; j < A.n(); j++) {
+                C(i,j) = A(i,j) + B(i,j);
+            }
+        }
+
+
+        return C;
+    }
+
+    Matrix sub(const Matrix &A, const Matrix &B) {
+
+        //Check dimension of each matrix
+        if (A.n() != B.n() || A.m() != B.m()) {
+            throw std::invalid_argument("Incompatible matrix dimensions.");
+        }
+
+        //Initializing C, to the dimension of A
+        Matrix C(A.m(), A.n());
+
+        //Looping through, populating C, with the addition of each entry
+        for (size_t i = 0; i < A.m(); i++) {
+            for (size_t j = 0; j < A.n(); j++) {
+                C(i,j) = A(i,j) - B(i,j);
+            }
+        }
+
+
+        return C;
+    }
+
+    Matrix multiply(const Matrix&A, const Matrix&B) {
+
+        //Checking dimensions are valid
+        if (A.n() != B.m()) {
+            throw std::invalid_argument("Incompatible matrix dimensions.");
+        }
+
+        // //Initializing matrix C, with dimensions R^(MxP)
+        Matrix C(A.m(), B.n());
+
+        //Multiplying via row-scaling (more explicit documentation is available @ https://github.com/Seth-Mazer/MiniCPP-Programs/blob/main/MatrixMultiplication/MatrixMultiplcation.cpp)
+        //For each row in A
+        for (size_t i = 0, rowA = A.m(); i < rowA; i++) {
+            // Scale row q of B by A(i,q)
+            for (size_t q = 0, rowB = B.m(); q < rowB; q++) {
+                // Accumulate the scaled row into row i of C
+                for (size_t j = 0; j < B.n(); j++) {
+                    C(i,j) += A(i,q) * B(q,j);
+                }
+            }
+        }
+
+        return C;
+    }
+
+    Matrix transpose(const Matrix &A) {
+
+        //Initializing AT, flipping from m x n, to n x m
+        Matrix AT(A.n(), A.m());
+
+        //A[i][j] = A^T[j][i] ==> we are simply assigning the "opposite" values
+        for (size_t i = 0; i < A.m(); i++) {
+            for (size_t j = 0; j <A.n(); j++) {
+                AT(j,i) = A(i,j);
+            }
+        }
+
+        return AT;
+    }
+
+    double dot(const Matrix &A, const Matrix &B) {
+
+        //Check if n x 1 matrices were passed
+        if (A.n() != 1 || B.n() != 1) {
+            throw std::invalid_argument("Dot product not defined | tried to dot non-vectors");
+        }
+
+        if (A.m() != B.m()) {
+            throw std::invalid_argument("Dot product not defined | vectors do not share the same dimension");
+        }
+
+        //Init dp at 0
+        double dp = 0;
+
+        //Multiplying the shared index of each vector together, and summing
+        for (size_t i = 0; i < A.m(); i++) {
+            dp += A(i,0) * B(i,0);
+        }
+
+        return dp;
+    }
+
+    //-----------------------------------------------------------------
+    //-----------------------------------------------------------------
+    // Basic Operations
+    //-----------------------------------------------------------------
+    //-----------------------------------------------------------------
+
+    Matrix proj(const Matrix &A, const Matrix &B) {
+        // Calculating (uTv / vTv) * v
+        double scalar = (dot(A,B) / dot(B,B));
+        return B.scale(scalar);
+    }
+}
+
