@@ -25,7 +25,7 @@ Here is what MyLA can do so far:
 
 ```cpp
 #include <iostream>
-#include <myla/myla.h>
+#include <MyLA/MyLA.h>
 
 int main() {
     myla::Matrix A(3, 3, {
