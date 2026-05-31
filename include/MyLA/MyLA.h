@@ -162,6 +162,28 @@ namespace myla {
             return rA;
         }
 
+        //Return identity matrix
+        Matrix identity() const {
+
+            //If not square, throw error
+            if (!isSquare()) {
+                throw std::invalid_argument("Tried to return identity of non-square matrix");
+            }
+
+            //Initializing identity matrix
+            Matrix I(rows, cols);
+
+            //Populate diagonal with 1's
+            for (size_t i = 0; i < rows; i++) {
+                I(i,i) = 1;
+            }
+            return I;
+
+        }
+
+
+
+
 
     };
 
