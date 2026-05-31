@@ -17,7 +17,7 @@ Here is what MyLA can do so far:
 - Identity Matrix Generation
 - Dot Products
 - Vector Projections
-- And many more utility functions
+- And more utility functions (e.g. getCol, isSquare, etc.)
 
 
 # Example
