@@ -9,17 +9,16 @@ Many libraries abstract away the math we use.  MyLA was built for the purpose of
 
 Here is what MyLA can do so far:
 
-- Matrix Addition
-- Matrix Subtraction
+- Matrix Addition / Subtraction
 - Matrix Multiplication
-- Scalar Scaling
-- Transpose
-- Trace
-- Norms
+- Matrix Augmentation
+- Transpose, Trace, Norms, Scaling
+- Symmetry Checking
+- Identity Matrix Generation
 - Dot Products
-- Vector Projection
+- Vector Projections
+- And many more utility functions
 
-- See roadmap for future features
 
 # Example
 
