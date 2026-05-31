@@ -60,6 +60,12 @@ namespace myla {
         }
 
 
+        //-----------------------------------------------------------------
+        //-----------------------------------------------------------------
+        // Operators
+        //-----------------------------------------------------------------
+        //-----------------------------------------------------------------
+
         //Operator for (), allows us to directly say A(i,j)
         double& operator()(size_t i, size_t j) {
             //Checking if, index is "out of bounds" in the sense that it's not a valid representation of what we actually want
@@ -80,6 +86,26 @@ namespace myla {
             //return proper entry
             return data[i * cols + j];
         }
+
+        //Operator for ==, allows us to compare self
+        bool operator==(const Matrix &B) const {
+            //Check dims
+            if (rows != B.m() || cols != B.n()) {
+                return false;
+            }
+
+            //Loop through, compare each entry, first error, return false
+            for (size_t i = 0; i < rows; i++) {
+                for (size_t j = 0; j < cols; j++) {
+                    if ((*this)(i,j) != B(i,j)) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
 
 
         //-----------------------------------------------------------------
@@ -181,11 +207,35 @@ namespace myla {
 
         }
 
+        //Read the free function version for comments
+        Matrix transpose() const {
+            Matrix AT(cols, rows);
+            for (size_t i = 0; i < rows; i++) {
+                for (size_t j = 0; j < cols; j++) {
+                    AT(j,i) = (*this)(i,j);
+                }
+            }
+
+            return AT;
+        }
+
+
+        // Check if matrix is symmetric
+         bool isSymmetric() const {
+            //Check the obvious first
+            if (!isSquare()) {
+                return false;
+            }
+
+            //Return bool
+            return (*this) == transpose();
+         }
 
 
 
 
     };
+
 
     //-----------------------------------------------------------------
     //-----------------------------------------------------------------
