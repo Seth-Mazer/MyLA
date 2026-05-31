@@ -144,5 +144,39 @@ namespace myla {
         double scalar = (dot(A,B) / dot(B,B));
         return B.scale(scalar);
     }
+
+    Matrix augment(const Matrix &A, const Matrix &B) {
+        //Check if b.m() = A.m()
+        if (B.m() != A.m()) {
+            throw std::invalid_argument("Tried to construct [A | b], b.m() != A.m()");
+        }
+
+        //Initializing AB (really A|B), with proper dims
+        Matrix AB = {A.m(), (A.n() + B.n())};
+
+        //Looping through AB
+        for (size_t i = 0; i < AB.m(); i++) {
+            for (size_t j = 0; j < AB.n(); j++) {
+                //If we are "passed" A's cols, start entering from B
+                if (j >= A.n()) {
+                    //Offset j by the current A col index, to properly access Bs "starting point"
+                    AB(i,j) = B(i,j - A.n());
+                } else {
+                    AB(i,j) = A(i,j);
+                }
+            }
+        }
+
+        return AB;
+    }
+
+
+
+
+
+
+
+
+
 }
 

@@ -232,6 +232,44 @@ namespace myla {
          }
 
 
+        //Get Col, returns the entire column at position n
+        Matrix getCol(const size_t n) const {
+            //Check if index exists
+            if (n >= cols) {
+                throw std::invalid_argument("Tried to get column, column index out of bounds");
+            }
+
+            //Init col
+            Matrix col = {rows, 1};
+
+            //Loop through the col at pos. n, assign values to col
+            for (size_t i = 0; i < rows; i++) {
+                col(i,0) = (*this)(i,n);
+            }
+
+            //Return col
+            return col;
+        }
+
+        //Get row, returns the entire row at position m
+        Matrix getRow(const size_t m) {
+            //Check if index exists
+            if (m >= rows) {
+                throw std::invalid_argument("Tried to get row, row index out of bounds");
+            }
+
+            //Init row
+            Matrix row = {1, cols};
+
+            //Loop through the row at pos. n, assign values to row
+            for (size_t j = 0; j < cols; j++) {
+                row(0,j) = (*this)(m,j);
+            }
+
+            //Return row
+            return row;
+        }
+
 
 
     };
@@ -270,6 +308,8 @@ namespace myla {
     //Project A onto B
     Matrix proj(const Matrix &A, const Matrix &B);
 
+    //Augment, Construct [ A | b ]
+    Matrix augment(const Matrix &A, const Matrix&B);
 
 
 
