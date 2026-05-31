@@ -1,5 +1,6 @@
 //Includes
 #include <MyLA/MyLA.h>
+#include <iostream>
 
 
 //-----------------------------------------------------------------
@@ -15,6 +16,18 @@ namespace myla {
     // Primitive Operations
     //-----------------------------------------------------------------
     //-----------------------------------------------------------------
+
+    void print(const Matrix &A) {
+        //Loop through matrix, printing each entry out
+        for (size_t i = 0; i < A.m(); i++) {
+            for (size_t j = 0; j < A.n(); j++) {
+                std::cout << A(i, j) << "\t";
+            }
+            std::cout << "\n";
+        }
+    }
+
+
 
     Matrix add(const Matrix &A, const Matrix &B) {
 

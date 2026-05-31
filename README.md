@@ -35,13 +35,8 @@ int main() {
     });
 
     myla::Matrix B = myla::multiply(A, transpose(A));
+    myla::print(B);
 
-    for (size_t i = 0; i < B.m(); i++) {
-        for (size_t j = 0; j < B.n(); j++) {
-            std::cout << B(i, j) << "\t";
-        }
-        std::cout << "\n";
-    }
 }
 ```
 

@@ -1,5 +1,6 @@
 ***FEATURE ADDITION LOG****
 
+>5/30/2026 > Added print function. Now you can print your matrices to the console
 
 > 5/30/2026 > Added == operator, to check if matrices are equal, added isSymmetric to check if matrices are symmetric
 added transpose as a member function as well

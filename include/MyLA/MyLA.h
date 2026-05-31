@@ -243,6 +243,9 @@ namespace myla {
     //-----------------------------------------------------------------
     //-----------------------------------------------------------------
 
+    //Print the matrix to the console
+    void print(const Matrix &A);
+
     //Add two matrices A and B
     Matrix add(const Matrix &A, const Matrix &B);
 
