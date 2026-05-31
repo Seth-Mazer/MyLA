@@ -34,7 +34,7 @@ int main() {
         7, 8, 9
     });
 
-    myla::Matrix B = myla::multiply(A, transpose(A));
+    myla::Matrix B = myla::multiply(A, A.transpose());
     myla::print(B);
 
 }
