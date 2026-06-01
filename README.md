@@ -12,6 +12,7 @@ Here is what MyLA can do so far:
 - Matrix Addition / Subtraction
 - Matrix Multiplication
 - Matrix Augmentation
+- Elementary Row Operations
 - Transpose, Trace, Norms, Scaling
 - Symmetry Checking
 - Identity Matrix Generation
@@ -23,21 +24,71 @@ Here is what MyLA can do so far:
 # Example
 
 ```cpp
-#include <iostream>
 #include <MyLA/MyLA.h>
 
 int main() {
+    // Initialzing a 3x3 Matrix, and populating its entries
+    // We could also omit the data, then it would be initialized as zero matrix
     myla::Matrix A(3, 3, {
         1, 2, 3,
         4, 5, 6,
         7, 8, 9
     });
-
+    
+    // Lets now Initialize B, with the result of multiplying A by its transpose, then print B to the console
     myla::Matrix B = myla::multiply(A, A.transpose());
     myla::print(B);
 
 }
 ```
+# Example #2
+
+```cpp
+#include <MyLA/MyLA.h>
+#include <iostream>
+
+int main() {
+    // Lets create another matrix A
+    myla::Matrix A(3, 3, {
+        5, 7, 1,
+        1, 4, 6,
+        8, 2, 9
+    });
+    
+    // And an n x 1 (vector) matrix b
+    myla::Matrix b(3, 1, {
+    5,
+    6,
+    7
+    });
+
+    // Let's Augment A with b
+    myla::Matrix Ab = myla::augment(A, b);
+    // Now Ab is:
+    // 5       7       1       5
+    // 1       4       6       6
+    // 8       2       9       7
+
+    // Now, let's swap row 1 and 2, bringing 2 to the top.
+    Ab.rowSwap(0,1);
+    // Now Ab is:
+    // 1       4       6       6
+    // 5       7       1       5
+    // 8       2       9       7
+
+    // Let's check if Ab is square, if not, print Ab's dimensions
+    if (Ab.isSquare()) {
+        std::cout << "Ab is square";
+    } else {
+        std::cout << "Ab is not square, it's a " << Ab.m() << " by " << Ab.n() << " matrix";
+    }
+    
+    // We know Ab.isSquare() will return false, as we started with a 3x3 matrick
+    // and augmented it with a 3x1 matrix. Thus we will print "Ab is not square" along with its dimensions
+    
+}
+```
+
 
 
 # Build
