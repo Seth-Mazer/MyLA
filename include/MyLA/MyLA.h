@@ -252,7 +252,7 @@ namespace myla {
         }
 
         //Get row, returns the entire row at position m
-        Matrix getRow(const size_t m) {
+        Matrix getRow(const size_t m) const {
             //Check if index exists
             if (m >= rows) {
                 throw std::invalid_argument("Tried to get row, row index out of bounds");
