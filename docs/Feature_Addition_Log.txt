@@ -1,6 +1,9 @@
 ***FEATURE ADDITION LOG****
 **THIS IS PURELY A FEATURE ADDITION LOG, BUG FIXES FOR EXAMPLE WOULD NOT BE INCLUDED**
 
+
+> 6/1/2026 > Added elementary row operations
+
 > 5/31/2026 > Added augment function. Can now create [ A | B ].
 Added A.getCol(i) and A.getRow(i), to retrieve respective columns or rows of matrices
 

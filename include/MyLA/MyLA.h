@@ -270,6 +270,64 @@ namespace myla {
             return row;
         }
 
+        //-----------------------------------------------------------------
+        //-----------------------------------------------------------------
+        // Elementary Row Operations
+        //-----------------------------------------------------------------
+        //-----------------------------------------------------------------
+
+        //interchange two rows
+        void rowSwap(const size_t curLoc, const size_t swapLoc) {
+            //Check if interchange position exists
+            if (swapLoc >= rows || curLoc >= rows) {
+                throw std::invalid_argument("Tried to interchange rows, indices is out of bounds");
+            }
+
+            //Return if row indices are equal
+            if (curLoc == swapLoc) {
+                return;
+            }
+
+            //Overwriting the current row, with the new row, and vice versa
+            for (size_t j = 0; j < cols; j++) {
+                double temp = (*this)(curLoc, j);
+                (*this)(curLoc, j) = (*this)(swapLoc,j);
+                (*this)(swapLoc,j) = temp;
+            }
+
+        }
+
+        //Scale a row >> NOTE: THIS WILL MUTATE A! To scale a matrix/vector and return a copy, use scale(r)
+        void rowScale(const size_t row, const double r) {
+            //Check if row pos exists
+            if (row >= rows) {
+                throw std::invalid_argument("Tried to scale row, row index is out of bounds");
+            }
+
+            //Scaling row
+            for (size_t j = 0; j < cols; j++) {
+                (*this)(row,j) *= r;
+            }
+
+        }
+
+        //Replace one row by the sum of itself and a scalar multiple of another row>> NOTE: THIS WILL MUTATE A! To add, rows and return a row, use myla::add(getRow(0), getRow(1));
+        void rowAddScaled(const size_t firstRow, const double r, const size_t secondRow) {
+            if (firstRow >= rows || secondRow >= rows) {
+                throw std::invalid_argument("Tried to add rows, row index is out of bounds");
+            }
+
+            //Check if r is not 0
+            if (r == 0) {
+                return;
+            }
+
+
+            for (size_t j = 0; j < cols; j++) {
+                (*this)(firstRow,j) += ( (r * (*this)(secondRow,j)));
+
+            }
+        }
 
 
     };
