@@ -83,7 +83,7 @@ int main() {
         std::cout << "Ab is not square, it's a " << Ab.m() << " by " << Ab.n() << " matrix";
     }
     
-    // We know Ab.isSquare() will return false, as we started with a 3x3 matrick
+    // We know Ab.isSquare() will return false, as we started with a 3x3 matrix
     // and augmented it with a 3x1 matrix. Thus we will print "Ab is not square" along with its dimensions
     
 }
