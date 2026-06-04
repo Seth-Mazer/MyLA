@@ -156,6 +156,31 @@ namespace myla {
             return std::sqrt(sumsquares);
         }
 
+        //Normalize a vector, A/||A||, returns a normalized copy of A
+        Matrix normalized() const {
+            //Check if n x 1
+            if (cols != 1) {
+                throw std::invalid_argument("Tried to normalize, matrix is not n x 1");
+            }
+
+            //Grab norm
+            double nrm = norm();
+
+            //vNM = vector normalized
+            if (nrm == 0){
+                throw std::invalid_argument("Tried to divide by zero | normalize()");
+            }
+
+            return scale(1/nrm);
+        }
+
+        //Normalize a vector, A/||A|| >> NOTE: THIS WILL MUTATE A! to return a copy, use normalized()
+        void normalize() {
+            *this = normalized();
+        }
+
+
+
         //Return Frobenius norm ||A||_F
         double normf() const {
 

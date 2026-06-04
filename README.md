@@ -13,7 +13,7 @@ Here is what MyLA can do so far:
 - Matrix Multiplication
 - Matrix Augmentation
 - Elementary Row Operations
-- Transpose, Trace, Norms, Scaling
+- Transpose, Trace, Norms, Normalization, Scaling
 - Symmetry Checking
 - Identity Matrix Generation
 - Dot Products
