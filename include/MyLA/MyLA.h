@@ -382,6 +382,9 @@ namespace myla {
     //Compute dot product
     double dot(const Matrix &A, const Matrix &B);
 
+    //Compute outer product >> NOTE: B must be 1 x n. I.e, if dealing with n x 1 matrices, simply pass yourSecondVec.transpose()
+    Matrix outerProduct(const Matrix &A, const Matrix &B);
+
     //-----------------------------------------------------------------
     //-----------------------------------------------------------------
     // Basic Operations
@@ -393,6 +396,12 @@ namespace myla {
 
     //Augment, Construct [ A | b ]
     Matrix augment(const Matrix &A, const Matrix&B);
+
+    //-----------------------------------------------------------------
+    //-----------------------------------------------------------------
+    // Algorithms
+    //-----------------------------------------------------------------
+    //-----------------------------------------------------------------
 
 
 

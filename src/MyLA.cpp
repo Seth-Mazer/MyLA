@@ -133,6 +133,27 @@ namespace myla {
         return dp;
     }
 
+    Matrix outerProduct(const Matrix& A, const Matrix& B) {
+
+        //Check if n x 1 matrices were passed
+        if (A.n() != 1 || B.m() != 1) {
+            throw std::invalid_argument("Outer product not defined | vectors are not in m x 1 and 1 x n form");
+        }
+
+        //Init OP
+        Matrix oP(A.m(), B.n());
+
+        for (size_t i = 0; i < A.m(); i++) {
+            for (size_t j = 0; j < B.n(); j++) {
+                oP(i,j) = A(i,0) *  B(0, j);
+            }
+        }
+
+        return oP;
+
+    }
+
+
     //-----------------------------------------------------------------
     //-----------------------------------------------------------------
     // Basic Operations

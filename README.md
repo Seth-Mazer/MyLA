@@ -16,7 +16,7 @@ Here is what MyLA can do so far:
 - Transpose, Trace, Norms, Normalization, Scaling
 - Symmetry Checking
 - Identity Matrix Generation
-- Dot Products
+- Inner Products / Outer Products
 - Vector Projections
 - And more utility functions (e.g. getCol, isSquare, etc.)
 
