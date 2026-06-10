@@ -191,7 +191,77 @@ namespace myla {
         return AB;
     }
 
+    //-----------------------------------------------------------------
+    //-----------------------------------------------------------------
+    // Algorithms
+    //-----------------------------------------------------------------
+    //-----------------------------------------------------------------
 
+    LUDecomp LU(Matrix &A) {
+
+        // Init a matrix P, to keep track of permutations. Note, this isn't a permutation matrix,
+        // Merely a vector that's order gets swapped with A.
+        Matrix P(A.m(), 1);
+        //Essentially Init an 'order' for P to be swapped alongside A,
+        //we cast i to a double because the data in our matrices are stored as doubles
+        for (size_t i = 0; i < A.m(); ++i) {
+            P(i, 0) = static_cast<double>(i);
+        }
+
+        //Init a constraint for how many diagonal entries are in A
+        const size_t maxDiag = std::min(A.m(), A.n());
+
+
+        //Main loop to iterate down pivot positions
+        for (size_t j = 0; j < maxDiag; j++) {
+
+            //Set up partial pivot, here, we are setting our current indices to be the largest pivot,
+            //before iterating down the current column to potentially interchange
+            size_t pivotRow = j;
+            double largestPivot = std::fabs(A(j,j));
+
+            //Search down the current column, comparing our current largest pivot to each entry beneath the col
+            //If larger entry found, update largestPivot, and pivotRow.
+            for (size_t q = j + 1; q < A.m(); q++) {
+                if (std::fabs(A(q,j)) > largestPivot) {
+                    largestPivot = std::fabs(A(q,j));
+                    pivotRow = q;
+                }
+            }
+
+            //Check if singular, if so throw error
+            if (largestPivot == 0) {
+                throw std::runtime_error("Matrix is singular, largestPivot = 0");
+            }
+
+
+            //Interchanging rows, and tracking with P
+            A.rowSwap(j,pivotRow);
+            P.rowSwap(j, pivotRow);
+
+
+            //Computing multipliers beneath each pivot
+            //Here we are also transforming each entry under the pivot to the multiplier
+            //Aka we are essentially creating L in place
+            for (size_t i = j + 1;  i < A.m(); i++) {
+                A(i,j) /= A(j,j);
+            };
+
+
+            //Trailing Block Computation, here we essentially do R < R - mu, where m is our multipliers,
+            //and u is the portion of our pivot row, to the immediate right of our pivot, essentially subtracting the outer matrix block
+            //from the current sub matrix, then we do this process iteratively, hence the trailing
+            for (size_t i = j + 1; i < A.m(); i++) {
+                for (size_t col = j + 1; col < A.n(); col++) {
+                    A(i,col) -= A(i,j) * A(j,col);
+                }
+            }
+
+        }
+
+        //Return the packed LU factorization, and P
+        return {A, P};
+    }
 
 
 

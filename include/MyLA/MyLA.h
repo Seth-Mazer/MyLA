@@ -403,6 +403,14 @@ namespace myla {
     //-----------------------------------------------------------------
     //-----------------------------------------------------------------
 
+    struct LUDecomp {
+        Matrix LU;
+        Matrix P;
+    };
+
+    //Computes LU in place, returns packed LU factorization, and P >> NOTE: THIS WILL MUTATE A, COPY A PRIOR IF NECESSARY
+    LUDecomp LU(Matrix &A);
+
 
 
 

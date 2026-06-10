@@ -1,8 +1,10 @@
 ***FEATURE ADDITION LOG****
 **THIS IS PURELY A FEATURE ADDITION LOG, BUG FIXES FOR EXAMPLE WOULD NOT BE INCLUDED**
 
-> 6/9/2026 > Added a outerProduct function. Which takes two matrices in n x 1 and 1 x n form, and returns the outer product
+> 6/10/2026 Finally added LU Factorization, using a partial pivoting and outer product (trailing block) computation method. Calling LU(A)
+ will return the packed factorization of LU.
 
+> 6/9/2026 > Added a outerProduct function. Which takes two matrices in n x 1 and 1 x n form, and returns the outer product
 
 > 6/4/2026 > Added A.normalize() which mutates A, and added A.normalized() which returns a normalized copy
 

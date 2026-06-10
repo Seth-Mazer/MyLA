@@ -9,6 +9,7 @@ Many libraries abstract away the math we use.  MyLA was built for the purpose of
 
 Here is what MyLA can do so far:
 
+- LU Factorization via Outer Product with Partial Pivoting
 - Matrix Addition / Subtraction
 - Matrix Multiplication
 - Matrix Augmentation
@@ -89,6 +90,29 @@ int main() {
 }
 ```
 
+# Example #3
+
+```cpp
+#include <MyLA/MyLA.h>
+#include <iostream>
+
+int main() {
+    // Lets create another matrix A
+    myla::Matrix A(3, 3, {
+        1, 2, 3,
+        4, 5, 6,
+        7, 8, 9
+    });
+    
+    myla::LU(A);
+    myla::print(A);
+    //This will print a packed LU factorization
+    // 7	8	9	
+    // 0.142857	0.857143	1.71429	
+    // 0.571429	0.5	1.11022e-16	
+    
+}
+```
 
 
 # Build
