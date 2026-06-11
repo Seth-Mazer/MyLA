@@ -199,18 +199,14 @@ namespace myla {
 
     LUDecomp LU(Matrix &A) {
 
-        // Init a matrix P, to keep track of permutations. Note, this isn't a permutation matrix,
-        // Merely a vector that's order gets swapped with A.
+        // Init a matrix P, to keep track of permutations.
         Matrix P(A.m(), 1);
-        //Essentially Init an 'order' for P to be swapped alongside A,
-        //we cast i to a double because the data in our matrices are stored as doubles
-        for (size_t i = 0; i < A.m(); ++i) {
-            P(i, 0) = static_cast<double>(i);
-        }
 
         //Init a constraint for how many diagonal entries are in A
         const size_t maxDiag = std::min(A.m(), A.n());
 
+        //Epsilon
+        const double epsilon = 1e-12;
 
         //Main loop to iterate down pivot positions
         for (size_t j = 0; j < maxDiag; j++) {
@@ -230,28 +226,27 @@ namespace myla {
             }
 
             //Check if singular, if so throw error
-            if (largestPivot == 0) {
-                throw std::runtime_error("Matrix is singular, largestPivot = 0");
+            if (largestPivot < epsilon) {
+                throw std::runtime_error("Matrix is singular, largestPivot < epsilon(1e-12)");
             }
 
 
-            //Interchanging rows, and tracking with P
+            //Interchanging rows, and tracking row swaps with P
             A.rowSwap(j,pivotRow);
-            P.rowSwap(j, pivotRow);
-
-
-            //Computing multipliers beneath each pivot
-            //Here we are also transforming each entry under the pivot to the multiplier
-            //Aka we are essentially creating L in place
-            for (size_t i = j + 1;  i < A.m(); i++) {
-                A(i,j) /= A(j,j);
-            };
+            P(j,0) = static_cast<double>(pivotRow);
 
 
             //Trailing Block Computation, here we essentially do R < R - mu, where m is our multipliers,
             //and u is the portion of our pivot row, to the immediate right of our pivot, essentially subtracting the outer matrix block
             //from the current sub matrix, then we do this process iteratively, hence the trailing
             for (size_t i = j + 1; i < A.m(); i++) {
+
+                //Computing multipliers beneath each pivot
+                //Here we are also transforming each entry under the pivot to the multiplier
+                //Aka we are essentially creating L in place
+                A(i,j) /= A(j,j);
+
+
                 for (size_t col = j + 1; col < A.n(); col++) {
                     A(i,col) -= A(i,j) * A(j,col);
                 }
@@ -265,8 +260,76 @@ namespace myla {
 
 
 
+    Matrix forSub(const Matrix &A, const Matrix &P, Matrix &B) {
+
+        //Permutating B, i.e. b -> Pb
+        for (size_t i = 0; i < B.m(); i++) {
+            B.rowSwap(i, static_cast<size_t>(P(i,0)));
+        }
+
+        //init y
+        Matrix Y(B.m(),1);
+
+        //Solving yi + 1 = bi - L_ij(y_j) (omitted division, as its assumed the diagonal is 1)
+        for (size_t i = 0; i < A.m(); i++) {
+            double sum = 0.0;
+
+            //Computing the sum portion
+            for (size_t j = 0; j < i; j++) {
+                sum += A(i,j) * Y(j,0);
+            }
+
+            //Computing each y_i
+            Y(i,0) = B(i,0) - sum;
+
+        }
+
+        //Returning Y
+        return Y;
+    }
 
 
+    Matrix backSub(const Matrix &A, const Matrix &Y) {
+
+        //Init x
+        Matrix X(Y.m(), 1);
+
+        //Starting from the bottom, and looping up
+        for (size_t i = A.n(); i-- > 0;) {
+            double sum = 0.0;
+
+            //Computing the sum portion
+            for (size_t j = i + 1; j < A.n(); j++) {
+                sum += A(i,j) * X(j,0);
+            }
+
+            //Computing each x_i
+            X(i,0) = (Y(i,0) - sum)/ A(i,i);
+
+        }
+
+        //Returning X
+        return X;
+    }
+
+    Matrix solve(Matrix &A, Matrix &B) {
+
+        //Here I'm limiting solve() to square systems for now
+        //I haven't yet implemented handling for underdetermined or overdetermined systems
+
+        if (!A.isSquare())
+            throw std::invalid_argument("Tried to solve non-square system | solve()");
+
+        if (B.n() != 1)
+            throw std::invalid_argument("Tried to solve Ax = b, where b is not a vector | solve()");
+
+        if (B.m() != A.m())
+            throw std::invalid_argument("Tried to solve Ax = b, dimension mismatch | solve()");
+
+        //Call LU, and return X
+        LUDecomp packed = LU(A);
+        return backSub(packed.LU, forSub(packed.LU, packed.P, B));
+    }
 
 
 }

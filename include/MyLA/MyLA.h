@@ -411,6 +411,14 @@ namespace myla {
     //Computes LU in place, returns packed LU factorization, and P >> NOTE: THIS WILL MUTATE A, COPY A PRIOR IF NECESSARY
     LUDecomp LU(Matrix &A);
 
+    //Solving a Lower triangular system, via forward sub
+    Matrix forSub(const Matrix &A);
+
+    //Solving an Upper triangular system, via back sub
+    Matrix backSub(const Matrix &A);
+
+    //Solves Ax=b using an LU factorization with forSub/backSub >> NOTE: THIS WILL MUTATE A, COPY A PRIOR IF NECESSARY
+    Matrix solve(Matrix &A, Matrix &B);
 
 
 

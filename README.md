@@ -9,7 +9,7 @@ Many libraries abstract away the math we use.  MyLA was built for the purpose of
 
 Here is what MyLA can do so far:
 
-- LU Factorization via Outer Product with Partial Pivoting
+- Computation of Ax = B with LU Factorization via Outer Product and Partial Pivoting
 - Matrix Addition / Subtraction
 - Matrix Multiplication
 - Matrix Augmentation
@@ -22,95 +22,71 @@ Here is what MyLA can do so far:
 - And more utility functions (e.g. getCol, isSquare, etc.)
 
 
-# Example
+# Example #1
 
 ```cpp
 #include <MyLA/MyLA.h>
-
 int main() {
-    // Initialzing a 3x3 Matrix, and populating its entries
-    // We could also omit the data, then it would be initialized as zero matrix
+    
+    
+    // Initializing a 3x3 Matrix, and populating its entries
+    // We could also omit the data, however, then it would be initialized as zero matrix    
     myla::Matrix A(3, 3, {
-        1, 2, 3,
-        4, 5, 6,
-        7, 8, 9
+        1, 2, 1,
+        3, 2, 4,
+        4, 1, 3,
+    });
+
+
+    // Let's now initialize our b vector
+    myla::Matrix b(3,1, {
+        5,
+        13,
+        11,
     });
     
-    // Lets now Initialize B, with the result of multiplying A by its transpose, then print B to the console
-    myla::Matrix B = myla::multiply(A, A.transpose());
-    myla::print(B);
-
+    
+    // Now, simply call solve() to solve the system!
+    myla::Matrix x = solve(A,b);
+    
+    
+    // Now we can Print x, our solution vector
+    myla::print(x);
+    
+    // Prints
+    // 1
+    // 1
+    // 2
+    
 }
 ```
 # Example #2
 
 ```cpp
 #include <MyLA/MyLA.h>
-#include <iostream>
-
 int main() {
-    // Lets create another matrix A
-    myla::Matrix A(3, 3, {
-        5, 7, 1,
-        1, 4, 6,
-        8, 2, 9
-    });
     
-    // And an n x 1 (vector) matrix b
-    myla::Matrix b(3, 1, {
-    5,
-    6,
-    7
-    });
-
-    // Let's Augment A with b
-    myla::Matrix Ab = myla::augment(A, b);
-    // Now Ab is:
-    // 5       7       1       5
-    // 1       4       6       6
-    // 8       2       9       7
-
-    // Now, let's swap row 1 and 2, bringing 2 to the top.
-    Ab.rowSwap(0,1);
-    // Now Ab is:
-    // 1       4       6       6
-    // 5       7       1       5
-    // 8       2       9       7
-
-    // Let's check if Ab is square, if not, print Ab's dimensions
-    if (Ab.isSquare()) {
-        std::cout << "Ab is square";
-    } else {
-        std::cout << "Ab is not square, it's a " << Ab.m() << " by " << Ab.n() << " matrix";
-    }
     
-    // We know Ab.isSquare() will return false, as we started with a 3x3 matrix
-    // and augmented it with a 3x1 matrix. Thus we will print "Ab is not square" along with its dimensions
-    
-}
-```
-
-# Example #3
-
-```cpp
-#include <MyLA/MyLA.h>
-#include <iostream>
-
-int main() {
-    // Lets create another matrix A
+    // Lets initialize another matrix A;
     myla::Matrix A(3, 3, {
         1, 2, 3,
         4, 5, 6,
         7, 8, 9
     });
     
-    myla::LU(A);
-    myla::print(A);
-    //This will print a packed LU factorization
-    // 7	8	9	
-    // 0.142857	0.857143	1.71429	
-    // 0.571429	0.5	1.11022e-16	
     
+    // Lets now Initialize B, with the result of multiplying A by its transpose
+    myla::Matrix B = myla::multiply(A, A.transpose());
+    
+
+    // Then print B to the console
+    myla::print(B);
+    
+    // Prints
+    // 14 32 50
+    // 32 77 122
+    // 50 122 194
+
 }
 ```
 
@@ -137,7 +113,7 @@ cmake --build build --config Release
 
 This version is intended as the absolute bare-bones release of MyLA, essentially, what operations do we need, in order to build future operations? For example, in order to build a function projecting a vector onto another vector, one would have to build the dot product before hand. Version 0 consists of most of the "elementary functions," if you will, of linear algebra, that must exist for the more complicated procedures.
 
-## Version 1
+## Version 1 (We are now here!)
 
 - General Usability
 

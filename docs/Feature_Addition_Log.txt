@@ -1,5 +1,9 @@
 ***FEATURE ADDITION LOG****
-**THIS IS PURELY A FEATURE ADDITION LOG, BUG FIXES FOR EXAMPLE WOULD NOT BE INCLUDED**
+**THIS IS PURELY A FEATURE ADDITION LOG, BUG FIXES / MINOR LOGIC UPDATES FOR EXAMPLE WOULD NOT BE INCLUDED**
+
+> 6/11/26 Added solve(), calling solve is essentially a wrapper for calling LU(), backSub(), and forSub(). Its contained nice and neat, so
+all you need is to define your matrix A, and your vector B, and call solve(A,B). You don't need to directly use LU/forSub/backSub. However, they are available,
+if you have triangular systems.
 
 > 6/10/2026 Finally added LU Factorization, using a partial pivoting and outer product (trailing block) computation method. Calling LU(A)
  will return the packed factorization of LU.
