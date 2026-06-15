@@ -64,10 +64,10 @@ int main() {
     // myla::Matrix Y = forSub(LU_of_A.LU, LU_of_A.P, b);
     // myla::Matrix x = backSub(LU_of_A.LU, Y);
     // myla::print(x);
-    // This would yield the same results as solve(), allocating a copy of A, as solve() passes a copy,
+    // This would yield the same results as solve(), without allocating a copy of A, as solve() passes a copy,
     // we could also do solve_e(), which is what solve() calls with the copy of A.
     
-}
+}"
 ```
 # Example #2
 
