@@ -227,7 +227,6 @@ namespace myla {
         const size_t maxDiag = std::min(A.m(), A.n());
 
         //Epsilon
-        const double epsilon = 1e-12;
 
         //Main loop to iterate down pivot positions
         for (size_t j = 0; j < maxDiag; j++) {
@@ -247,7 +246,7 @@ namespace myla {
             }
 
             //Check if singular, if so throw error
-            if (largestPivot < epsilon) {
+            if (constexpr double epsilon = 1e-12; largestPivot < epsilon) {
                 throw std::runtime_error("Matrix is singular, largestPivot < epsilon(1e-12)");
             }
 
