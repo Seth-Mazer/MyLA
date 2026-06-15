@@ -191,6 +191,24 @@ namespace myla {
         return AB;
     }
 
+
+    double det(const Matrix &A) {
+        //Call LU_Safe(), to return packed LU
+        LUDecomp AD = LU_Safe(A);
+
+        //Determine sign
+        const double sign = (AD.swapCount % 2 == 0) ? 1.0 : -1.0;
+
+        //Multiply down diagonal
+        double det = 1.0;
+        for (size_t j = 0; j < AD.LU.n(); j++) {
+            det *= AD.LU(j,j);
+        }
+
+        return det * sign;
+    }
+
+
     //-----------------------------------------------------------------
     //-----------------------------------------------------------------
     // Algorithms
@@ -199,8 +217,11 @@ namespace myla {
 
     LUDecomp LU(Matrix &A) {
 
-        // Init a matrix P, to keep track of permutations.
+        //Init a matrix P, to keep track of permutations.
         Matrix P(A.m(), 1);
+
+        //Init swapCount, to keep track of how many swaps occur, for det sign
+        int swapCount = 0;
 
         //Init a constraint for how many diagonal entries are in A
         const size_t maxDiag = std::min(A.m(), A.n());
@@ -231,8 +252,11 @@ namespace myla {
             }
 
 
-            //Interchanging rows, and tracking row swaps with P
-            A.rowSwap(j,pivotRow);
+            //Interchanging rows, incrementing swap count, and tracking row swaps with P
+            if (j != pivotRow) {
+                A.rowSwap(j,pivotRow);
+                swapCount++;
+            }
             P(j,0) = static_cast<double>(pivotRow);
 
 
@@ -255,9 +279,15 @@ namespace myla {
         }
 
         //Return the packed LU factorization, and P
-        return {A, P};
+        return {A, P, swapCount};
     }
 
+
+    LUDecomp LU_Safe(const Matrix &A) {
+        //Copying over A, to B, to run LU on B, keeping A intact
+        Matrix B = A;
+        return LU(B);
+    }
 
 
     Matrix forSub(const Matrix &A, const Matrix &P, Matrix &B) {
@@ -312,24 +342,34 @@ namespace myla {
         return X;
     }
 
-    Matrix solve(Matrix &A, Matrix &B) {
+    Matrix solve_e(Matrix &A, Matrix &B) {
 
         //Here I'm limiting solve() to square systems for now
         //I haven't yet implemented handling for underdetermined or overdetermined systems
 
         if (!A.isSquare())
-            throw std::invalid_argument("Tried to solve non-square system | solve()");
+            throw std::invalid_argument("Tried to solve non-square system | solve_e()");
 
         if (B.n() != 1)
-            throw std::invalid_argument("Tried to solve Ax = b, where b is not a vector | solve()");
+            throw std::invalid_argument("Tried to solve Ax = b, where b is not a vector | solve_e()");
 
         if (B.m() != A.m())
-            throw std::invalid_argument("Tried to solve Ax = b, dimension mismatch | solve()");
+            throw std::invalid_argument("Tried to solve Ax = b, dimension mismatch | solve_e()");
 
         //Call LU, and return X
         LUDecomp packed = LU(A);
         return backSub(packed.LU, forSub(packed.LU, packed.P, B));
     }
+
+
+    Matrix solve(const Matrix& A, Matrix& B) {
+        //Copy A to C.
+        Matrix C = A;
+        return solve_e(C, B);
+    }
+
+
+
 
 
 }

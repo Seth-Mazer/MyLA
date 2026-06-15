@@ -14,7 +14,7 @@ Here is what MyLA can do so far:
 - Matrix Multiplication
 - Matrix Augmentation
 - Elementary Row Operations
-- Transpose, Trace, Norms, Normalization, Scaling
+- Transpose, Determinant, Trace, Norms, Normalization, Scaling
 - Symmetry Checking
 - Identity Matrix Generation
 - Inner Products / Outer Products
@@ -57,6 +57,15 @@ int main() {
     // 1
     // 1
     // 2
+    
+    
+    // Note, if we wanted to exercise, more "precise" control, we could instead do:
+    // myla::LUDecomp LU_of_A = LU(A);
+    // myla::Matrix Y = forSub(LU_of_A.LU, LU_of_A.P, b);
+    // myla::Matrix x = backSub(LU_of_A.LU, Y);
+    // myla::print(x);
+    // This would yield the same results as solve(), allocating a copy of A, as solve() passes a copy,
+    // we could also do solve_e(), which is what solve() calls with the copy of A.
     
 }
 ```

@@ -1,6 +1,8 @@
 ***FEATURE ADDITION LOG****
 **THIS IS PURELY A FEATURE ADDITION LOG, BUG FIXES / MINOR LOGIC UPDATES FOR EXAMPLE WOULD NOT BE INCLUDED**
 
+> 6/15/26 Added det(), returns the determinant of a matrix, also re-wrote solve(), and added solve_e(). solve() now copies A to B, and calls solve_e() with B. Thus leaving A intact.
+
 > 6/11/26 Added solve(), calling solve is essentially a wrapper for calling LU(), backSub(), and forSub(). Its contained nice and neat, so
 all you need is to define your matrix A, and your vector B, and call solve(A,B). You don't need to directly use LU/forSub/backSub. However, they are available,
 if you have triangular systems.

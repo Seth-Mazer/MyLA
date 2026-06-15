@@ -397,29 +397,40 @@ namespace myla {
     //Augment, Construct [ A | b ]
     Matrix augment(const Matrix &A, const Matrix&B);
 
+    //Returns the determinant of a matrix -> Will allocate memory to compute, for inplace, use det_e
+    double det(const Matrix &A);
+
     //-----------------------------------------------------------------
     //-----------------------------------------------------------------
     // Algorithms
     //-----------------------------------------------------------------
     //-----------------------------------------------------------------
 
+    //Struct that stores LU, Permutation Vector (n x 1 matrix), and swapCount
     struct LUDecomp {
         Matrix LU;
         Matrix P;
+        int swapCount = 0;
     };
 
     //Computes LU in place, returns packed LU factorization, and P >> NOTE: THIS WILL MUTATE A, COPY A PRIOR IF NECESSARY
     LUDecomp LU(Matrix &A);
 
+    //Copies A to B, then calls LU, keeping A intact
+    LUDecomp LU_Safe(const Matrix &A);
+
     //Solving a Lower triangular system, via forward sub
-    Matrix forSub(const Matrix &A);
+    Matrix forSub(const Matrix &A, const Matrix &P, Matrix &B);
 
     //Solving an Upper triangular system, via back sub
-    Matrix backSub(const Matrix &A);
+    Matrix backSub(const Matrix &A, const Matrix &Y);
 
-    //Solves Ax=b using an LU factorization with forSub/backSub >> NOTE: THIS WILL MUTATE A, COPY A PRIOR IF NECESSARY
+    //Solves Ax=b using an LU factorization with forSub/backSub >> NOTE: THIS WILL MUTATE A, use solve() to pass a copy
+    Matrix solve_e(Matrix &A, Matrix &B);
+
+    //Solves Ax=b using an LU factorization with forSub/backSub >> NOTE: This will allocate a copy of A.
+    //To solve without allocating a copy of A, use solve_e()
     Matrix solve(Matrix &A, Matrix &B);
-
 
 
 
