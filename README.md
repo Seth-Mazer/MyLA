@@ -179,7 +179,7 @@ This version is intended as the absolute bare-bones release of MyLA, essentially
 
 ---
 
-## Version 1 (We are now here!)
+## Version 1 (We are here)
 
 - General Usability
 
