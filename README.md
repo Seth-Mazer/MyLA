@@ -1,9 +1,11 @@
 # MyLA
 
-A lightweight linear algebra library written in C++.
+A numerical linear algebra library written in C++.
 
 MyLA was built from scratch as an applied mathematics / numerical computation project. The library currently implements primitive matrix and vector operations using a custom Matrix class.
 Many libraries abstract away the math we use.  MyLA was built for the purpose of answering one question, what is actually under the abstraction?
+
+---
 
 #  Features
 
@@ -22,7 +24,16 @@ Here is what MyLA can do so far:
 - Vector Projections
 - And more utility functions (e.g. getCol, isSquare, etc.)
 
+---
 
+# Design
+
+MyLA uses a flattened row-major storage, chosen specifically for cache locality.
+Certain design choices are made to maximize numerical stability, and minimize unnecessary memory allocations.
+For example, in both LU and QR, MyLA overwrites A with packed factorizations, thus there is no additional L, U, Q, R or Householder vectors, stored in memory.
+Everything needed out of, or from, the factorizations can be extracted, or implicitly calculated on the fly.
+
+---
 # Example #1: Solving Ax = B, via LU
 
 ```cpp
@@ -140,6 +151,9 @@ int main() {
 
 
 # Build
+
+---
+
 Clone the repository:
 
 ```bash
@@ -156,10 +170,14 @@ cmake --build build --config Release
 
 # Roadmap
 
+---
+
 ## Version 0
 - Primitive operations 
 
 This version is intended as the absolute bare-bones release of MyLA, essentially, what operations do we need, in order to build future operations? For example, in order to build a function projecting a vector onto another vector, one would have to build the dot product before hand. Version 0 consists of most of the "elementary functions," if you will, of linear algebra, that must exist for the more complicated procedures.
+
+---
 
 ## Version 1 (We are now here!)
 
@@ -176,6 +194,7 @@ And more Quality of Life features like computing powers of matrices via exponent
 
 For this version, one should think, "I could put together a project, and ship it. Will it be the most optimized fast solver in the world? No. But it will be fully functional, and it will work. That is the point."
 
+---
 ## Version 2
 
 - Numerical Accuracy
@@ -188,6 +207,7 @@ For version 2, one should expect less new operations, but much, much more confid
 Along with more optimization, as I intend to overhaul the memory layout for improved performance
 
 ---
+
 
 ## Why did I build this?
 
