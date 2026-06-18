@@ -1,9 +1,9 @@
 # MyLA
 
-A numerical linear algebra library written in C++.
+A numerical linear algebra library written in  C++, with zero external dependencies.
 
-MyLA was built from scratch as an applied mathematics / numerical computation project. The library currently implements primitive matrix and vector operations using a custom Matrix class.
-Many libraries abstract away the math we use.  MyLA was built for the purpose of answering one question, what is actually under the abstraction?
+Many libraries abstract away the math we use. 
+MyLA was built to answer one question: What is actually under the abstraction?
 
 ---
 
