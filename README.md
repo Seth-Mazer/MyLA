@@ -79,7 +79,7 @@ int main() {
     // This would yield the same results as solve(), without allocating a copy of A, as solve() passes a copy,
     // we could also do solve_e(), which is what solve() calls with the copy of A.
     
-}"
+}
 ```
 # Example #2: A Packed QR Factorization
 
