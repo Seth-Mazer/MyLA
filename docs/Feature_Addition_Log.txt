@@ -1,6 +1,12 @@
 ***FEATURE ADDITION LOG****
 **THIS IS PURELY A FEATURE ADDITION LOG, BUG FIXES / MINOR LOGIC UPDATES FOR EXAMPLE WOULD NOT BE INCLUDED**
 
+> 6/17/26 Added a QR Factorization, utilizing householder vectors. Calling QR(A) on a matrix A, will return a packed QR factorization of A,
+with the upper triangular matrix being R, including the diagonal, and the lower triangular not including the diagonal being the householder vectors. In this case, the first entry of each
+householder vector is 1, thus both the householder vectors and R are fully packed in to the returned object.
+
+This function will also return a vector of beta values, which can be used to calculate Q, via backwards accumulation, which will be added soon.
+
 > 6/15/26 Added det(), returns the determinant of a matrix, also re-wrote solve(), and added solve_e(). solve() now copies A to B, and calls solve_e() with B. Thus leaving A intact.
 
 > 6/11/26 Added solve(), calling solve is essentially a wrapper for calling LU(), backSub(), and forSub(). Its contained nice and neat, so

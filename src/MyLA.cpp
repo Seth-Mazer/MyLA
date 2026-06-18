@@ -368,6 +368,112 @@ namespace myla {
     }
 
 
+    double houseHolder(Matrix &A, size_t row, size_t col) {
+
+        //Calculating the sign of the first component of x, then calculating alpha, +-||x||
+        const double sign = (A(row,col) >= 0) ? 1.0 : -1.0;
+
+        //Calculating the norm of the active column we are in
+        double normSq = 0.0;
+        for (size_t i = row; i < A.m(); i++) {
+            normSq += A(i,col)*A(i,col);
+        }
+
+        //Calculating ||x||
+        const double norm = std::sqrt(normSq);
+
+        //Updating the first coord basis position of A
+        A(row,col) += sign*norm;
+
+        //Calculating the diagonal entry of R, which is just -sign*norm
+        //Then determining if we might result in a near-singular matrix, due to rDiag being near zero, if so, throw
+        //to avoid division by near zero problems
+        double rDiag = -sign*norm;
+        if (constexpr double epsilon = 1e-12; std::fabs(rDiag) < epsilon) {
+            throw std::runtime_error("Matrix is near-rank deficient, a diagonal value of R is < epsilon(1e-12)");
+        }
+
+
+        //Grabbing the first entry of the active column
+        double Azero = A(row,col);
+
+        //Scaling the active column
+        for (size_t i = row; i < A.m(); i++) {
+            A(i,col) *= (1.0/Azero);
+        }
+
+
+        //Computing the dot here 'manually', because we cannot pass a column vector to dot() here
+        //Note this dP != normSq
+        double dot = 0.0;
+
+        //Offsetting i, to account for the diagonal of A, being the diagonal entries of R
+        //This does not matter as, since we normalized the first entry, we can treat it as one,
+        //and just add 1 to the dot, as 1^2 is just 1, we can add 1 to the sum of squares
+        for (size_t i = row + 1; i < A.m(); i++) {
+            dot += A(i, col) * A(i, col);
+        }
+
+        //Setting the head of the householder vector to be the diagonal entry of R
+        //This is so when we start at j + 1, in the QR function to avoid destruction, we just
+        //set the diagonal here, and implicitly treat the head of the houseHolder vector as 1
+        A(row, col) = rDiag;
+
+        //Computing and returning beta, which is just 2/(1 + xTx), note we add one to account for the offset
+        return (2.0 / (1 + dot));
+    }
+
+
+    QRDecomp QR(Matrix& A) {
+
+        //Create a maximum index, prevent indexing out of bounds
+        const size_t maxDiag = std::min(A.m(),A.n());
+
+        //Initializing a vector to store beta values, restricted to the maxDiag
+        Matrix Betas(maxDiag,1);
+
+        //Looping down the columns of A
+            for (size_t j = 0; j < maxDiag; j++) {
+                //Calling houseHolder(), to compute and store the houseHolder vectors **in** A,
+                //and return beta
+                double beta = houseHolder(A,j,j);
+                Betas(j,0) = beta;
+
+                //Looping through the sub matrix, to compute vT*A where A is the sub matrix,
+                //and vT is the stored houseHolder vectors already in A
+                for (size_t k = j + 1; k < A.n(); k++) {
+
+                    //Computing vTa and setting the first value of the dot product to A(j,k)
+                    //because we cant dot the first index of v, as its the diagonal of R, but since its one,
+                    //we can just set it as itself
+                    double vTa = A(j,k);
+                    for (size_t i = j + 1; i < A.m(); i++) {
+                        vTa += A(i,j) * A(i,k);
+                    }
+
+
+                    //We do the same thing for the first index of A as well, for analogous reasons
+                    A(j,k) -= beta * vTa;
+
+                    //Here we are applying an implicitly constructed householder matrix, to each column of A,
+                    //in turn creating R, while also storing the householder vectors in the lower triangular portion
+                    for (size_t i = j + 1; i < A.m(); i++) {
+                        A(i,k) -= beta * A(i,j) * vTa;
+                    }
+
+                }
+
+            }
+
+        //Returning the packed QR
+        return {A, Betas};
+    }
+
+
+
+
+
+
 
 
 

@@ -256,6 +256,17 @@ namespace myla {
             return (*this) == transpose();
          }
 
+        //Set col, sets the indices of a col, to given values
+        void setCol(const size_t j, const double value) {
+
+            //looping down the jth column, assigning value
+            for (size_t i = 0; i < rows; i++) {
+                (*this)(i,j) = value;
+            }
+
+        }
+
+
 
         //Get Col, returns the entire column at position n
         Matrix getCol(const size_t n) const {
@@ -275,6 +286,7 @@ namespace myla {
             //Return col
             return col;
         }
+
 
         //Get row, returns the entire row at position m
         Matrix getRow(const size_t m) const {
@@ -413,7 +425,7 @@ namespace myla {
         int swapCount = 0;
     };
 
-    //Computes LU in place, returns packed LU factorization, and P >> NOTE: THIS WILL MUTATE A, COPY A PRIOR IF NECESSARY
+    //Computes LU in place, returns packed LU factorization, and P >> NOTE: THIS WILL MUTATE A, USE LU_Safe IF NECESSARY
     LUDecomp LU(Matrix &A);
 
     //Copies A to B, then calls LU, keeping A intact
@@ -432,7 +444,18 @@ namespace myla {
     //To solve without allocating a copy of A, use solve_e()
     Matrix solve(Matrix &A, Matrix &B);
 
+    //Struct that stores the packed QR matrix, along with the beta values from the houseHolder computation;
+    struct QRDecomp {
+        Matrix QR;
+        Matrix Betas;
+    };
 
+
+    //Factorizes QR in place, returns packed QR factorization >> NOTE: THIS WILL MUTATE A
+    QRDecomp QR(Matrix &A);
+
+    //Mutates a sub column of A into a householder vector, computes and sets diagonal R entry, and computes and returns beta >> NOTE: Not really intended for use outside QR
+    double houseHolder(Matrix &A, size_t row, size_t col);
 
 }
 

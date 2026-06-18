@@ -9,6 +9,7 @@ Many libraries abstract away the math we use.  MyLA was built for the purpose of
 
 Here is what MyLA can do so far:
 
+- Packed Householder QR Factorization of A
 - Computation of Ax = B with LU Factorization via Outer Product and Partial Pivoting
 - Matrix Addition / Subtraction
 - Matrix Multiplication
@@ -22,7 +23,7 @@ Here is what MyLA can do so far:
 - And more utility functions (e.g. getCol, isSquare, etc.)
 
 
-# Example #1
+# Example #1: Solving Ax = B, via LU
 
 ```cpp
 #include <MyLA/MyLA.h>
@@ -69,7 +70,45 @@ int main() {
     
 }"
 ```
-# Example #2
+# Example #2: A Packed QR Factorization
+
+```cpp
+#include <MyLA/MyLA.h>
+int main() {
+
+
+    // Let's initialize another matrix A;
+    myla::Matrix A(3, 3, {
+        12, -51, 4,
+        6, 167, -68,
+        -4, 24, -41
+    });
+
+
+    // Let's now create a QR Decomp object, to store the results of the QR Factorization
+    myla::QRDecomp QR_of_A = QR(A);
+
+    // Now, we have a packed QR, along with a vector of Beta values, we will print both.
+    myla::print(QR_of_A.QR);
+
+    // Prints
+    // -14	-21	14
+    // 0.230769	-175	70
+    // -0.153846	0.0555556	35
+
+    myla::print(QR_of_A.Betas);
+
+    // Prints
+    //1.85714
+    // 1.99385
+    // 2
+
+}
+```
+
+
+
+# Example #3: Matrix Multiplication
 
 ```cpp
 #include <MyLA/MyLA.h>
