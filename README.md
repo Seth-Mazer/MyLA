@@ -29,7 +29,7 @@ Here is what MyLA can do so far:
 # Design
 
 MyLA uses a flattened row-major storage, chosen specifically for cache locality.
-Certain design choices are made to maximize numerical stability, and minimize unnecessary memory allocations.
+There are certain design choices made to maximize numerical stability, and minimize unnecessary memory allocations.
 For example, in both LU and QR, MyLA overwrites A with packed factorizations, thus there is no additional L, U, Q, R or Householder vectors, stored in memory.
 Everything needed out of, or from, the factorizations can be extracted, or implicitly calculated on the fly.
 
