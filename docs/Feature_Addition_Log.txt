@@ -1,6 +1,9 @@
 ***FEATURE ADDITION LOG****
 **THIS IS PURELY A FEATURE ADDITION LOG, BUG FIXES / MINOR LOGIC UPDATES FOR EXAMPLE WOULD NOT BE INCLUDED**
 
+> 6/21/26 Added leastSquares(), you can pass a tall or square matrix, along with a vector b, and return the least squares solution. Take note of the leastSquares()
+function comments for the limitation
+
 > 6/17/26 Added a QR Factorization, utilizing householder vectors. Calling QR(A) on a matrix A, will return a packed QR factorization of A,
 with the upper triangular matrix being R, including the diagonal, and the lower triangular not including the diagonal being the householder vectors. In this case, the first entry of each
 householder vector is 1, thus both the householder vectors and R are fully packed in to the returned object.

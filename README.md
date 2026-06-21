@@ -11,6 +11,7 @@ MyLA was built to answer one question: What is actually under the abstraction?
 
 Here is what MyLA can do so far:
 
+- Least Squares Solutions
 - Packed Householder QR Factorization of A
 - Computation of Ax = B with LU Factorization via Outer Product and Partial Pivoting
 - Matrix Addition / Subtraction
@@ -39,7 +40,6 @@ Everything needed out of, or from, the factorizations can be extracted, or impli
 ```cpp
 #include <MyLA/MyLA.h>
 int main() {
-    
     
     // Initializing a 3x3 Matrix, and populating its entries
     // We could also omit the data, however, then it would be initialized as zero matrix    
@@ -81,39 +81,38 @@ int main() {
     
 }
 ```
-# Example #2: A Packed QR Factorization
+# Example #2: A Least Squares Solution
 
 ```cpp
 #include <MyLA/MyLA.h>
 int main() {
 
-
     // Let's initialize another matrix A;
-    myla::Matrix A(3, 3, {
-        12, -51, 4,
-        6, 167, -68,
-        -4, 24, -41
+    myla::Matrix A(3, 2, {
+        1, 2,
+        1, 5,
+        1, 8
     });
 
+    //And a vector b
+    myla::Matrix b(3,1, {
+        7,
+        12,
+        19
+    });
 
-    // Let's now create a QR Decomp object, to store the results of the QR Factorization
-    myla::QRDecomp QR_of_A = QR(A);
+    //We can compute the least squares solution, simply by calling leastSquares()
+    myla::Matrix xHat = myla::leastSquares(A,b);
 
-    // Now, we have a packed QR, along with a vector of Beta values, we will print both.
-    myla::print(QR_of_A.QR);
+    //Let's print our least squares solution
+    myla::print(xHat);
 
     // Prints
-    // -14	-21	14
-    // 0.230769	-175	70
-    // -0.153846	0.0555556	35
-
-    myla::print(QR_of_A.Betas);
-
-    // Prints
-    //1.85714
-    // 1.99385
+    // 2.6667
     // 2
 
+    // Much like the first example with our LU Factorization,
+    // If we wanted to exercise more "precise" control, we could, using the internal function in leastSquares() manually
 }
 ```
 
@@ -201,7 +200,7 @@ For this version, one should think, "I could put together a project, and ship it
 - Optimization
 
 For this version, in the far future, this is where the accuracy of computational linear algebra will be evaluated, and improved. 
-A large focus will be on numerical accuracy, such as stability, conditioning improvements,  rank determination, etc. 
+A large focus will be on numerical accuracy, such as stability, conditioning improvements, etc. 
 For version 2, one should expect less new operations, but much, much more confidence and accuracy in computation. 
 
 Along with more optimization, as I intend to overhaul the memory layout for improved performance

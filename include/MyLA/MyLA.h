@@ -457,6 +457,13 @@ namespace myla {
     //Mutates a sub column of A into a householder vector, computes and sets diagonal R entry, and computes and returns beta >> NOTE: Not really intended for use outside QR
     double houseHolder(Matrix &A, size_t row, size_t col);
 
+    //Compute QTB, i.e. Rx = QtB, compute the QtB component, using the householder vectors
+    Matrix qTb(const Matrix &A, const Matrix &B);
+
+    //Find a least squares solution to an overdetermined full rank design matrix X, with observation vector y
+    Matrix leastSquares(const Matrix &X, const Matrix &y);
+
+
 }
 
 

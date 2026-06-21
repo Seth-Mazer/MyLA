@@ -33,7 +33,7 @@ namespace myla {
 
         //Check dimension of each matrix
         if (A.n() != B.n() || A.m() != B.m()) {
-            throw std::invalid_argument("Incompatible matrix dimensions.");
+            throw std::invalid_argument("Incompatible matrix dimensions. | add()");
         }
 
         //Initializing C, to the dimension of A
@@ -54,7 +54,7 @@ namespace myla {
 
         //Check dimension of each matrix
         if (A.n() != B.n() || A.m() != B.m()) {
-            throw std::invalid_argument("Incompatible matrix dimensions.");
+            throw std::invalid_argument("Incompatible matrix dimensions. | sub()");
         }
 
         //Initializing C, to the dimension of A
@@ -71,11 +71,11 @@ namespace myla {
         return C;
     }
 
-    Matrix multiply(const Matrix&A, const Matrix&B) {
+    Matrix multiply(const Matrix &A, const Matrix &B) {
 
         //Checking dimensions are valid
         if (A.n() != B.m()) {
-            throw std::invalid_argument("Incompatible matrix dimensions.");
+            throw std::invalid_argument("Incompatible matrix dimensions. | multiply()");
         }
 
         // //Initializing matrix C, with dimensions R^(MxP)
@@ -115,11 +115,11 @@ namespace myla {
 
         //Check if n x 1 matrices were passed
         if (A.n() != 1 || B.n() != 1) {
-            throw std::invalid_argument("Dot product not defined | tried to dot non-vectors");
+            throw std::invalid_argument("Dot product not defined | tried to dot non-vectors | dot()");
         }
 
         if (A.m() != B.m()) {
-            throw std::invalid_argument("Dot product not defined | vectors do not share the same dimension");
+            throw std::invalid_argument("Dot product not defined | vectors do not share the same dimension | dot()");
         }
 
         //Init dp at 0
@@ -133,11 +133,11 @@ namespace myla {
         return dp;
     }
 
-    Matrix outerProduct(const Matrix& A, const Matrix& B) {
+    Matrix outerProduct(const Matrix &A, const Matrix &B) {
 
         //Check if n x 1 matrices were passed
         if (A.n() != 1 || B.m() != 1) {
-            throw std::invalid_argument("Outer product not defined | vectors are not in m x 1 and 1 x n form");
+            throw std::invalid_argument("Outer product not defined | vectors are not in m x 1 and 1 x n form | outerProduct()");
         }
 
         //Init OP
@@ -169,7 +169,7 @@ namespace myla {
     Matrix augment(const Matrix &A, const Matrix &B) {
         //Check if b.m() = A.m()
         if (B.m() != A.m()) {
-            throw std::invalid_argument("Tried to construct [A | b], b.m() != A.m()");
+            throw std::invalid_argument("Tried to construct [A | b], b.m() != A.m() | augment()");
         }
 
         //Initializing AB (really A|B), with proper dims
@@ -247,7 +247,7 @@ namespace myla {
 
             //Check if singular, if so throw error
             if (constexpr double epsilon = 1e-12; largestPivot < epsilon) {
-                throw std::runtime_error("Matrix is singular, largestPivot < epsilon(1e-12)");
+                throw std::runtime_error("Matrix is singular, largestPivot < epsilon(1e-12) | LU()");
             }
 
 
@@ -321,7 +321,7 @@ namespace myla {
     Matrix backSub(const Matrix &A, const Matrix &Y) {
 
         //Init x
-        Matrix X(Y.m(), 1);
+        Matrix X(A.n(), 1);
 
         //Starting from the bottom, and looping up
         for (size_t i = A.n(); i-- > 0;) {
@@ -361,7 +361,7 @@ namespace myla {
     }
 
 
-    Matrix solve(const Matrix& A, Matrix& B) {
+    Matrix solve(const Matrix &A, Matrix &B) {
         //Copy A to C.
         Matrix C = A;
         return solve_e(C, B);
@@ -390,7 +390,7 @@ namespace myla {
         //to avoid division by near zero problems
         double rDiag = -sign*norm;
         if (constexpr double epsilon = 1e-12; std::fabs(rDiag) < epsilon) {
-            throw std::runtime_error("Matrix is near-rank deficient, a diagonal value of R is < epsilon(1e-12)");
+            throw std::runtime_error("Matrix is near-rank deficient, a diagonal value of R is < epsilon(1e-12) | houseHolder()");
         }
 
 
@@ -424,7 +424,7 @@ namespace myla {
     }
 
 
-    QRDecomp QR(Matrix& A) {
+    QRDecomp QR(Matrix &A) {
 
         //Create a maximum index, prevent indexing out of bounds
         const size_t maxDiag = std::min(A.m(),A.n());
@@ -470,10 +470,63 @@ namespace myla {
     }
 
 
+    Matrix qTb(const Matrix &A, const Matrix &betas, const Matrix &b) {
 
+        //Init a new matrix, qtb, because we're gonna assume the caller doesn't want their original data overwritten
+        Matrix qtb = b;
 
+        //Loop to construct qtb
+        for (size_t j = 0; j < A.n(); j++) {
 
+            //Here we initialize vTb, to the first indice of b, we do this because, the head
+            //of the householder vector is implicitly 1. However, recall that in the packed factorization,
+            //the diagonals belong to R
+            double vTb = qtb(j,0);
 
+            //Computing the rest of vTb, below the implicit head of 1
+            for (size_t i = j + 1; i < A.m(); i++) {
+                vTb += A(i,j) * qtb(i,0);
+            }
+
+            //Update the first index of qtb for analgous reasons to vtb
+            qtb(j,0) -= betas(j,0) * vTb;
+
+            //Loop to construct QtB
+            for (size_t i = j + 1; i < A.m(); i++) {
+                //Applying the reflectors to qtb
+                qtb(i,0) -= (betas(j,0) * vTb * A(i,j));
+            }
+        }
+
+       //return qtb
+        return qtb;
+    }
+
+//Rx = qTb, thus its really Ux = y, so backsub, where X is the design matrix.
+    Matrix leastSquares(const Matrix &A, const Matrix &y) {
+
+        //Check if matrix is square or tall, and not wide, to prevent rank deficient errors in the backsub portion
+        //Near-rank deficiency is handled in the householder function, thus tall matrices are allowed
+        if (A.m() < A.n()) {
+            throw std::invalid_argument(
+            "\nWide matrix Passed, Refuse to Compute QR backSub | leastSquares() \n"
+            "Try to make the matrix a square, or tall");
+        }
+
+        //Allocate a copy, to not destroy original matrix, then factor
+        Matrix X = A;
+        QRDecomp Xqr = QR(X);
+
+        //init and Compute qtb
+        Matrix qtb = qTb(Xqr.QR, Xqr.Betas, y);
+
+        //Compute Rx = QtB, via backsub
+        Matrix xhat = backSub(Xqr.QR, qtb);
+
+        //Return LS solution
+        return xhat;
+
+    }
 
 
 
