@@ -81,7 +81,7 @@ namespace myla {
         // //Initializing matrix C, with dimensions R^(MxP)
         Matrix C(A.m(), B.n());
 
-        //Multiplying via row-scaling (more explicit documentation is available @ https://github.com/Seth-Mazer/MiniCPP-Programs/blob/main/MatrixMultiplication/MatrixMultiplcation.cpp)
+        //Multiplying via row-scaling
         //For each row in A
         for (size_t i = 0, rowA = A.m(); i < rowA; i++) {
             // Scale row q of B by A(i,q)

@@ -458,7 +458,7 @@ namespace myla {
     double houseHolder(Matrix &A, size_t row, size_t col);
 
     //Compute QTB, i.e. Rx = QtB, compute the QtB component, using the householder vectors
-    Matrix qTb(const Matrix &A, const Matrix &B);
+    Matrix qTb(const Matrix &A, const Matrix &betas, const Matrix &b);
 
     //Find a least squares solution to an overdetermined full rank design matrix X, with observation vector y
     Matrix leastSquares(const Matrix &X, const Matrix &y);
