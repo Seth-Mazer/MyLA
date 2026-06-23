@@ -1,5 +1,5 @@
 //Includes
-#include <MyLA/MyLA.h>
+#include <MyLA.h>
 #include <iostream>
 
 

@@ -442,7 +442,7 @@ namespace myla {
 
     //Solves Ax=b using an LU factorization with forSub/backSub >> NOTE: This will allocate a copy of A.
     //To solve without allocating a copy of A, use solve_e()
-    Matrix solve(Matrix &A, Matrix &B);
+    Matrix solve(const Matrix &A, Matrix &B);
 
     //Struct that stores the packed QR matrix, along with the beta values from the houseHolder computation;
     struct QRDecomp {

@@ -38,7 +38,7 @@ Everything needed out of, or from, the factorizations can be extracted, or impli
 # Example #1: Solving Ax = B, via LU
 
 ```cpp
-#include <MyLA/MyLA.h>
+#include <MyLA.h>
 int main() {
     
     // Initializing a 3x3 Matrix, and populating its entries
@@ -84,7 +84,7 @@ int main() {
 # Example #2: A Least Squares Solution
 
 ```cpp
-#include <MyLA/MyLA.h>
+#include <MyLA.h>
 int main() {
 
     // Let's initialize another matrix A;
@@ -121,7 +121,7 @@ int main() {
 # Example #3: Matrix Multiplication
 
 ```cpp
-#include <MyLA/MyLA.h>
+#include <MyLA.h>
 int main() {
     
     
